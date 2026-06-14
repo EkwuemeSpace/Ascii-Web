@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -23,14 +24,15 @@
         <section>
             <form action="" method="post">
                 <label for="text">Enter Text</label>
-                <input type="text" name="text" id="text" placeholder="Enter text here">
-
+                <textarea name="text" id="text">Enter a word or sentence</textarea>
+                <br>
                 <label for="banner">Choose a banner</label>
                 <select name="banner" id="banner">
                     <option value="standard">standard</option>
                     <option value="shadow">shadow</option>
                     <option value="thinkertoy">thinkertoy</option>
                 </select>
+                <br>
                 <button type="submit">Generate Art now</button>
             </form>
         </section>
