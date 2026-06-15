@@ -5,5 +5,5 @@ func isValidArgsCount(args []string) bool {
 }
 
 func isValidChar(r rune) bool {
-	return r >= 32 && r <= 126
+	return (r >= 32 && r <= 126) || r == '\n'
 }

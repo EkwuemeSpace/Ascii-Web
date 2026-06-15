@@ -29,18 +29,25 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func asciiHandler(w http.ResponseWriter, r *http.Request) {
-	var result strings.Builder
 
 	if r.URL.Path != "/ascii-art" {
 		http.Error(w, "status not found", http.StatusNotFound)
 		return
 	}
 
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	if r.Method == http.MethodPost {
-		user := r.FormValue("text")
+		text := r.FormValue("text")
 		banner := r.FormValue("banner")
 
-		if user == "" || banner == "" {
+		//replaces the carriage return sent from the browser
+		text = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(text, "\r", ""), "\n", "\n"))
+
+		if text == "" || banner == "" {
 			http.Error(w, "input or banner cannot be empty", http.StatusBadRequest)
 			return
 		}
@@ -54,13 +61,13 @@ func asciiHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		err = renderString(&result, charMap, user)
+		output, err := renderString(charMap, text)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		data := Data{
-			Message: result.String(),
+			Message: output,
 		}
 
 		temp, err := template.ParseFiles("template/index.html")

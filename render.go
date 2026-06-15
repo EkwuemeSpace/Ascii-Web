@@ -2,26 +2,26 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"strings"
 )
 
-func renderString(w io.Writer, charMap map[rune][]string, input string) error {
+func renderString(charMap map[rune][]string, input string) (string, error) {
 	var result strings.Builder
 
 	for _, ch := range input {
 		if !isValidChar(ch) {
-			return fmt.Errorf("error: invalid character detected %q", ch)
+			return "", fmt.Errorf("error: invalid character detected %q", ch)
 		}
 	}
-	segment := strings.Split(input, `\n`)
+	segment := strings.Split(input, "\n")
+
 	if len(segment) > 1 && segment[0] == "" && segment[len(segment)-1] == "" {
 		segment = segment[:len(segment)-1]
 	}
 
 	for _, seg := range segment {
 		if seg == "" {
-			fmt.Fprintln(w)
+			result.WriteString("\n")
 			continue
 		}
 		for row := 0; row < 8; row++ {
@@ -31,9 +31,9 @@ func renderString(w io.Writer, charMap map[rune][]string, input string) error {
 					result.WriteString(art[row])
 				}
 			}
-			fmt.Fprintln(w, result.String())
-			result.Reset()
+			result.WriteString("\n")
+
 		}
 	}
-	return nil
+	return result.String(), nil
 }

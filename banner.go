@@ -7,7 +7,8 @@ import (
 )
 
 func readBannerFile(fileName string) (string, error) {
-	data, err := os.ReadFile(fileName)
+	path := "banners/" + fileName + ".txt"
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return "", fmt.Errorf("error reading file: %q:\n %w", fileName, err)
 	}
