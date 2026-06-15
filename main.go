@@ -1,29 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "invalid method", http.StatusMethodNotAllowed)
-	}
-	return
-}
-func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "invalid method", http.StatusMethodNotAllowed)
-	}
-	return
-}
-
 func main() {
 	http.HandleFunc("/", homeHandler)
-	http.HandleFunc("/ascii-art", asciiArtHandler)
+	http.HandleFunc("/ascii-art", asciiHandler)
 
-	fmt.Println("starting server ...")
+	//Look inside the folder named static in my project.
+	fs := http.FileServer(http.Dir("./static"))
+	//Turn my folder into a mini web server for files
+	http.Handle("/static", http.StripPrefix("/static", fs))
+
+	log.Println("staring seerver on port :8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
-		fmt.Println("error starting server")
+		log.Println(err)
+		return
 	}
 }
